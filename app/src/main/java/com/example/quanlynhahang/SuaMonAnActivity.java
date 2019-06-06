@@ -14,11 +14,16 @@ public class SuaMonAnActivity extends ThemMonAnActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         //setContentView(R.layout.activity_sua_mon_an);
+
+        txtAddTitle.setText(R.string.update_dish);
+        btnAdd.setText(R.string.update);
+
         final Intent intent =getIntent();
         edName.setText(intent.getStringExtra("Name"));
         edAddress.setText(intent.getStringExtra("Address"));
         Integer price = intent.getIntExtra("Price",0);
         edPrice.setText(price.toString());
+        btnAdd.setText("Update");
         btnAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

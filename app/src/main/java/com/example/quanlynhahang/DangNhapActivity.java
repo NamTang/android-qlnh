@@ -13,9 +13,11 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.service.SQLiteDB;
+
 public class DangNhapActivity extends AppCompatActivity {
 
-    static SQLiteDB sqLiteDB;
+    public static SQLiteDB sqLiteDB;
     EditText edtUser, edtPassword;
     Button btnLogin;
     TextView txtError;
@@ -61,10 +63,10 @@ public class DangNhapActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (login()) {
+                    txtError.setText("");
                     Intent intent = new Intent(DangNhapActivity.this, MainActivity.class);
                     startActivity(intent);
                     Toast.makeText(DangNhapActivity.this, "Login Success", Toast.LENGTH_SHORT).show();
-                    txtError.setText("");
                 } else {
                     Toast.makeText(DangNhapActivity.this, "Login Failed", Toast.LENGTH_SHORT).show();
                     txtError.setText("Incorrect user name or password.");
@@ -122,9 +124,23 @@ public class DangNhapActivity extends AppCompatActivity {
         edtPassword = findViewById(R.id.edtPassword);
         btnLogin = findViewById(R.id.btnLogin);
         btnLogin.setBackgroundColor(Color.GRAY);
+        txtError = findViewById(R.id.txtError);
     }
 
 //    public void exitAction(View view) {
 //        finish();
 //    }
+
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        sqLiteDB.close();
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        sqLiteDB = new SQLiteDB(this, "QuanLyNhaHang.db", null, 1);
+    }
 }

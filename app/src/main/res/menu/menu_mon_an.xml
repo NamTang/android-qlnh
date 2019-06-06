@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/mnuSearch"
+        android:icon="@drawable/ic_search_black_24dp"
+        android:title="Tìm kiếm"
+        app:actionViewClass="android.widget.SearchView"
+        app:showAsAction="always"/>
+    <item
+        android:id="@+id/mnuAdd"
+        android:title="@string/add" />
+    <item
+        android:id="@+id/mnuHelp"
+        android:title="@string/guide" />
+    <item
+        android:id="@+id/mnuAbout"
+        android:title="@string/about_us" />
+</menu>

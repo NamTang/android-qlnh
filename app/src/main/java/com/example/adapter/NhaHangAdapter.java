@@ -1,4 +1,4 @@
-package com.example.quanlynhahang;
+package com.example.adapter;
 
 import android.content.Context;
 import android.content.Intent;
@@ -14,6 +14,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.model.NhaHang;
+import com.example.quanlynhahang.DangNhapActivity;
+import com.example.quanlynhahang.R;
+import com.example.quanlynhahang.SuaMonAnActivity;
 
 import java.util.ArrayList;
 
@@ -68,7 +71,7 @@ public class NhaHangAdapter extends RecyclerView.Adapter<NhaHangAdapter.ViewHold
 
         @Override
         public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
-            menu.setHeaderTitle("Select Action");
+//            menu.setHeaderTitle("Select Action");
             MenuItem edit = menu.add(Menu.NONE, 1, 1, "Edit");
             MenuItem delete = menu.add(Menu.NONE, 2, 2, "Delete");
 

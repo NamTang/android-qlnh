@@ -7,26 +7,29 @@ import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.SearchView;
 
+import com.example.adapter.NhaHangAdapter;
 import com.example.model.NhaHang;
+import com.example.service.SQLiteDB;
 
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
-
+    public static SQLiteDB sqLiteDB;
     RecyclerView recyclerView;
     ArrayList<NhaHang> arrayRes;
     NhaHangAdapter nhaHangAdapter;
-    Button btnAddEating;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        sqLiteDB = new SQLiteDB(this, "QuanLyNhaHang.db", null, 1);
 
-
-        btnAddEating = findViewById(R.id.btnAddEating);
         recyclerView = findViewById(R.id.recycle_view);
         arrayRes = new ArrayList<>();
         nhaHangAdapter = new NhaHangAdapter(MainActivity.this,arrayRes);
@@ -40,19 +43,12 @@ public class MainActivity extends AppCompatActivity {
         //Get value
         GetData();
 
-        btnAddEating.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this,ThemMonAnActivity.class);
-                startActivity(intent);
-            }
-        });
         registerForContextMenu(recyclerView);
     }
     public void GetData()
     {
         arrayRes.clear();
-        Cursor cursor = DangNhapActivity.sqLiteDB.GetData("SELECT * FROM NhaHang");
+        Cursor cursor = sqLiteDB.GetData("SELECT * FROM NhaHang");
         while (cursor.moveToNext())
         {
             int id = cursor.getInt(0);
@@ -65,8 +61,68 @@ public class MainActivity extends AppCompatActivity {
     }
     @Override
     protected void onRestart() {
-        GetData();
+        sqLiteDB = new SQLiteDB(this, "QuanLyNhaHang.db", null, 1);
         super.onRestart();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        GetData();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        sqLiteDB.close();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_mon_an, menu);
+        MenuItem menuSearch = menu.findItem(R.id.mnuSearch);
+        SearchView searchView = (SearchView) menuSearch.getActionView();
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                processSearch(newText);
+                return false;
+            }
+        });
+
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.mnuAbout) {
+            Intent intent = new Intent(this, AboutActivity.class);
+            startActivity(intent);
+        } else if (item.getItemId() == R.id.mnuAdd) {
+            Intent intent = new Intent(MainActivity.this,ThemMonAnActivity.class);
+            startActivity(intent);
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void processSearch(String text) {
+        arrayRes.clear();
+        Cursor cursor = sqLiteDB.query("NhaHang", "TenMonAn like ? or GiaMonAn like ? or DiaDiem like ?",new String[]{"%" + text + "%", "%" + text + "%", "%" + text + "%"});
+        while (cursor.moveToNext()) {
+            int id = cursor.getInt(0);
+            String name = cursor.getString(1);
+            int price = cursor.getInt(2);
+            String address = cursor.getString(3);
+            NhaHang nhaHang = new NhaHang(id, name , price, address);
+            arrayRes.add(nhaHang);
+        }
+        nhaHangAdapter.notifyDataSetChanged();
     }
 
 }

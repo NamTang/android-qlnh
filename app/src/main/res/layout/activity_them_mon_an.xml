@@ -7,43 +7,48 @@
     tools:context=".ThemMonAnActivity">
 
     <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="THEM MON AN"
         android:id="@+id/txtTitleAdd"
-        android:textColor="#ff00"
-        android:textStyle="bold"
-        android:layout_centerHorizontal="true"
-        android:textSize="50sp"/>
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/edName"
-        android:hint="Nhap ten mon an"
-        android:layout_below="@id/txtTitleAdd"
-        android:layout_marginTop="30dp"/>
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/edPrice"
-        android:hint="Nhap gia mon an"
-        android:layout_below="@id/edName"
-        android:layout_marginTop="30dp"/>
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/edAddress"
-        android:hint="Nhap dia chi"
-        android:layout_below="@id/edPrice"
-        android:layout_marginTop="30dp"/>
-    <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/btnAdd"
-        android:layout_below="@id/edAddress"
-        android:text="ADD"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="50dp"/>
+        android:text="@string/add_dish"
+        android:textColor="#ff00"
+        android:textSize="50sp"
+        android:textStyle="bold" />
+
+    <EditText
+        android:id="@+id/edName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/txtTitleAdd"
+        android:layout_marginTop="30dp"
+        android:hint="@string/enter_dish_name" />
+
+    <EditText
+        android:id="@+id/edPrice"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/edName"
+        android:layout_marginTop="30dp"
+        android:hint="@string/enter_dish_price"
+        android:inputType="numberSigned" />
+
+    <EditText
+        android:id="@+id/edAddress"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/edPrice"
+        android:layout_marginTop="30dp"
+        android:hint="@string/enter_address" />
+
+    <Button
+        android:id="@+id/btnAdd"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/edAddress"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="50dp"
+        android:text="@string/add" />
 
 
 </RelativeLayout>
