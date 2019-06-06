@@ -2,6 +2,8 @@ package com.example.quanlynhahang;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -48,5 +50,21 @@ public class ThemMonAnActivity extends AppCompatActivity {
         edAddress = findViewById(R.id.edAddress);
         btnAdd = findViewById(R.id.btnAdd);
         txtAddTitle = findViewById(R.id.txtTitleAdd);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.mnu_crud, menu);
+
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.mnuBack) {
+            finish();
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 }
