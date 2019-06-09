@@ -1,5 +1,7 @@
 package com.example.quanlynhahang;
 
+import android.content.ContentValues;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -7,10 +9,12 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.ContextMenu;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.SearchView;
@@ -185,6 +189,7 @@ public class TableActivity extends AppCompatActivity {
             case R.id.mnuCheckout:
                 break;
             case R.id.mnuUpdateTable:
+                processUpdateTable();
                 break;
             case R.id.mnuDeleteTable:
                 deleteTable();
@@ -192,6 +197,100 @@ public class TableActivity extends AppCompatActivity {
         }
 
         return super.onContextItemSelected(item);
+    }
+
+    private void processUpdateTable() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(TableActivity.this);
+        builder.setTitle(R.string.update)
+                .setItems(R.array.table_action_array, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        // The 'which' argument contains the index position
+                        // of the selected item
+                        if (which == 0) {
+                            showDialogUpdateTableName();
+                        } else if (which == 1) {
+                            showDialogUpdateTableStatus();
+                        }
+                    }
+                });
+        builder.create().show();
+    }
+
+    private void showDialogUpdateTableStatus() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(TableActivity.this);
+        builder.setItems(R.array.table_status_array, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                // The 'which' argument contains the index position
+                // of the selected item
+                updateTableStatus(which);
+            }
+        });
+        builder.create().show();
+    }
+
+    private void updateTableStatus(int which) {
+        if (index >= 0) {
+            try {
+                ContentValues contentValues = new ContentValues();
+                contentValues.put("tstatus", which);
+                sqLiteDB.getWritableDatabase().update("Ban", contentValues, "id = ?", new String[]{"" + tableAdapter.getItem(index).getId()});
+                getData();
+                Toast.makeText(this, "Cập nhật thành công", Toast.LENGTH_SHORT).show();
+            } catch (Exception ex) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(TableActivity.this);
+
+                builder.setMessage("Có lỗi xảy ra khi cập nhật trạng thái, xin thử lại...")
+                        .setTitle("Lỗi");
+
+                builder.create().show();
+            }
+        }
+    }
+
+    private void showDialogUpdateTableName() {
+        final AlertDialog.Builder builder = new AlertDialog.Builder(TableActivity.this);
+        // Get the layout inflater
+        LayoutInflater inflater = getLayoutInflater();
+        // Inflate and set the layout for the dialog
+        // Pass null as the parent view because its going in the dialog layout
+        View dialogView = inflater.inflate(R.layout.dialog_update_table_name, null);
+        final EditText edtTableName = dialogView.findViewById(R.id.edtTableName);
+
+        builder.setView(dialogView)
+                // Add action buttons
+                .setPositiveButton(R.string.save, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int id) {
+                        // sign in the user ...
+                        updateTableName(edtTableName.getText().toString());
+                    }
+                })
+                .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.cancel();
+                    }
+                });
+
+        builder.create().show();
+    }
+
+    private void updateTableName(String name) {
+        if (index >= 0) {
+            try {
+                ContentValues contentValues = new ContentValues();
+                contentValues.put("name", name);
+                sqLiteDB.getWritableDatabase().update("Ban", contentValues, "id = ?", new String[]{"" + tableAdapter.getItem(index).getId()});
+                getData();
+                Toast.makeText(this, "Cập nhật thành công", Toast.LENGTH_SHORT).show();
+            } catch (Exception ex) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(TableActivity.this);
+
+                builder.setMessage("Có lỗi xảy ra khi cập nhật tên, xin thử lại...")
+                        .setTitle("Lỗi");
+
+                builder.create().show();
+            }
+        }
     }
 
     private void deleteTable() {
@@ -206,8 +305,7 @@ public class TableActivity extends AppCompatActivity {
                 builder.setMessage("Có lỗi xảy ra khi xóa, xin thử lại...")
                         .setTitle("Lỗi");
 
-                AlertDialog dialog = builder.create();
-                dialog.show();
+                builder.create().show();
             }
         }
     }

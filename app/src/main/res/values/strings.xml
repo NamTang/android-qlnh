@@ -22,4 +22,6 @@
     <string name="back">Quay lại</string>
     <string name="free">Bàn trống</string>
     <string name="have_guest">Có khách</string>
+    <string name="update_table">Cập nhật bàn</string>
+    <string name="cancel">Hủy</string>
 </resources>
