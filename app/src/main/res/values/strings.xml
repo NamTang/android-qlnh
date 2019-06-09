@@ -10,4 +10,16 @@
     <string name="enter_address">Nhập địa chỉ</string>
     <string name="guide">Hướng dẫn</string>
     <string name="about_us">Về chúng tôi</string>
+    <string name="food">Món ăn</string>
+    <string name="table">Bàn</string>
+    <string name="checkout">Tính tiền</string>
+    <string name="delete">Xóa</string>
+    <string name="auto_generate">Tự động tạo</string>
+    <string name="manual">Nhập tay</string>
+    <string name="table_name">Tên bàn</string>
+    <string name="quantity">Số lượng</string>
+    <string name="start_at">Bắt đầu từ</string>
+    <string name="back">Quay lại</string>
+    <string name="free">Bàn trống</string>
+    <string name="have_guest">Có khách</string>
 </resources>

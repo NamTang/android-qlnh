@@ -9,8 +9,16 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".AboutActivity"></activity>
-        <activity android:name=".DangNhapActivity">
+        <activity android:name=".AddTableActivity"></activity>
+        <activity android:name=".GuideActivity" />
+        <activity android:name=".TableActivity" />
+        <activity
+            android:name=".MenuActivity"
+            android:theme="@style/Theme.AppCompat.NoActionBar" />
+        <activity android:name=".AboutActivity" />
+        <activity
+            android:name=".DangNhapActivity"
+            android:theme="@style/Theme.AppCompat.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -19,7 +27,7 @@
         </activity>
         <activity android:name=".SuaMonAnActivity" />
         <activity android:name=".ThemMonAnActivity" />
-        <activity android:name=".MainActivity"></activity>
+        <activity android:name=".MainActivity" />
     </application>
 
 </manifest>

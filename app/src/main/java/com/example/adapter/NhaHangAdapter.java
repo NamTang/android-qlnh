@@ -61,6 +61,7 @@ public class NhaHangAdapter extends RecyclerView.Adapter<NhaHangAdapter.ViewHold
 
         TextView txtTen, txtGia, txtDiaChi;
 
+
         public ViewHolder(@NonNull final View itemView) {
             super(itemView);
             txtTen = itemView.findViewById(R.id.txtTen);
@@ -97,7 +98,7 @@ public class NhaHangAdapter extends RecyclerView.Adapter<NhaHangAdapter.ViewHold
                         return true;
                     case 2:
                         String delete = "DELETE FROM NhaHang Where Id = '" + arrayRes.get(getPosition()).getId() + "'";
-                        DangNhapActivity.sqLiteDB.QueryData(delete);
+                        DangNhapActivity.sqLiteDB.queryData(delete);
                         arrayRes.remove(arrayRes.get(getPosition()));
                         notifyDataSetChanged();
                         Toast.makeText(context, "Delete Success", Toast.LENGTH_LONG).show();

@@ -1,12 +1,13 @@
 package com.example.quanlynhahang;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -20,7 +21,7 @@ public class ThemMonAnActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_them_mon_an);
-
+        initActionBar();
         addControls();
         addEvents();
     }
@@ -35,7 +36,7 @@ public class ThemMonAnActivity extends AppCompatActivity {
 
                 if (!name.equals("") && !price.equals("") && !address.equals("")) {
                     String insertData = "INSERT INTO NhaHang VALUES (null,'" + name + "','" + price + "','" + address + "')";
-                    DangNhapActivity.sqLiteDB.QueryData(insertData);
+                    DangNhapActivity.sqLiteDB.queryData(insertData);
                 } else {
                     Toast.makeText(ThemMonAnActivity.this, "Vui long nhap day du thong tin cua mon an!", Toast.LENGTH_SHORT).show();
                 }
@@ -52,19 +53,32 @@ public class ThemMonAnActivity extends AppCompatActivity {
         txtAddTitle = findViewById(R.id.txtTitleAdd);
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.mnu_crud, menu);
+    private void initActionBar() {
+        this.getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
+        getSupportActionBar().setDisplayShowCustomEnabled(true);
+        getSupportActionBar().setCustomView(R.layout.custom_action_bar);
+        View view = getSupportActionBar().getCustomView();
+        ImageView imgBack = view.findViewById(R.id.imgBack);
+        imgBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
 
-        return super.onCreateOptionsMenu(menu);
+        // menu button
+        ImageView imgMenu = view.findViewById(R.id.imgMenu);
+        imgMenu.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                goMenu();
+            }
+        });
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.mnuBack) {
-            finish();
-        }
-
-        return super.onOptionsItemSelected(item);
+    private void goMenu() {
+        Intent menu = new Intent(this, MenuActivity.class);
+        menu.putExtra("from", "main");
+        startActivity(menu);
     }
 }

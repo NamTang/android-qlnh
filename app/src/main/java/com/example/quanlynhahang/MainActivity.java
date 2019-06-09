@@ -2,6 +2,7 @@ package com.example.quanlynhahang;
 
 import android.content.Intent;
 import android.database.Cursor;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -11,6 +12,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.SearchView;
 
 import com.example.adapter.NhaHangAdapter;
@@ -28,6 +30,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        initActionBar();
         sqLiteDB = new SQLiteDB(this, "QuanLyNhaHang.db", null, 1);
 
         recyclerView = findViewById(R.id.recycle_view);
@@ -41,14 +44,43 @@ public class MainActivity extends AppCompatActivity {
 
 
         //Get value
-        GetData();
+        getData();
 
         registerForContextMenu(recyclerView);
     }
-    public void GetData()
+
+    private void initActionBar() {
+        this.getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
+        getSupportActionBar().setDisplayShowCustomEnabled(true);
+        getSupportActionBar().setCustomView(R.layout.custom_action_bar);
+        View customActionBar = getSupportActionBar().getCustomView();
+
+        // back button
+        // hide and disable it cuz this activity don't need
+        ImageView imgBack = customActionBar.findViewById(R.id.imgBack);
+        imgBack.setVisibility(View.INVISIBLE);
+        imgBack.setEnabled(false);
+
+        // menu button
+        ImageView imgMenu = customActionBar.findViewById(R.id.imgMenu);
+        imgMenu.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                goMenu();
+            }
+        });
+    }
+
+    private void goMenu() {
+        Intent menu = new Intent(this, MenuActivity.class);
+        menu.putExtra("from", "main");
+        startActivity(menu);
+    }
+
+    public void getData()
     {
         arrayRes.clear();
-        Cursor cursor = sqLiteDB.GetData("SELECT * FROM NhaHang");
+        Cursor cursor = sqLiteDB.getData("SELECT * FROM NhaHang");
         while (cursor.moveToNext())
         {
             int id = cursor.getInt(0);
@@ -58,7 +90,9 @@ public class MainActivity extends AppCompatActivity {
             arrayRes.add(new NhaHang(id,ten_mon_an,gia_mon_an,dia_diem));
         }
         nhaHangAdapter.notifyDataSetChanged();
+        cursor.close();
     }
+
     @Override
     protected void onRestart() {
         sqLiteDB = new SQLiteDB(this, "QuanLyNhaHang.db", null, 1);
@@ -68,7 +102,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        GetData();
+        getData();
     }
 
     @Override
@@ -80,6 +114,8 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_mon_an, menu);
+        MenuItem mnuHelp = menu.findItem(R.id.mnuHelp);
+        mnuHelp.setVisible(false);
         MenuItem menuSearch = menu.findItem(R.id.mnuSearch);
         SearchView searchView = (SearchView) menuSearch.getActionView();
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -122,6 +158,7 @@ public class MainActivity extends AppCompatActivity {
             NhaHang nhaHang = new NhaHang(id, name , price, address);
             arrayRes.add(nhaHang);
         }
+        cursor.close();
         nhaHangAdapter.notifyDataSetChanged();
     }
 

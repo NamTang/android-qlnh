@@ -12,13 +12,13 @@ public class SQLiteDB extends SQLiteOpenHelper {
     }
 
     //Cau truy van khong tra ve ket qua (Them, xoa, sua)
-    public void QueryData(String sql) {
+    public void queryData(String sql) {
         SQLiteDatabase sqLiteDatabase = getWritableDatabase();
         sqLiteDatabase.execSQL(sql);
     }
 
     //Cau truy van tra ve ket qua
-    public Cursor GetData(String sql) {
+    public Cursor getData(String sql) {
         SQLiteDatabase sqLiteDatabase = getReadableDatabase();
         return sqLiteDatabase.rawQuery(sql, null);
     }

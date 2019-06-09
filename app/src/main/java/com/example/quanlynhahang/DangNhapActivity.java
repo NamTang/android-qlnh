@@ -30,12 +30,14 @@ public class DangNhapActivity extends AppCompatActivity {
         //Create database
         sqLiteDB = new SQLiteDB(this, "QuanLyNhaHang.db", null, 1);
         //Create table -- TenMonAn --- GiaMonAn -- DiaDiem
-        String create_table = "CREATE TABLE IF NOT EXISTS NhaHang(Id INTEGER PRIMARY KEY AUTOINCREMENT , TenMonAn VARCHAR , GiaMonAn INTEGER , DiaDiem VARCHAR )";
-        String create_table2 = "CREATE TABLE IF NOT EXISTS User(Id INTEGER PRIMARY KEY AUTOINCREMENT , UserName VARCHAR , Password VARCHAR );";
-        sqLiteDB.QueryData(create_table);
-        sqLiteDB.QueryData(create_table2);
+        String create_restaurant = "CREATE TABLE IF NOT EXISTS NhaHang(Id INTEGER PRIMARY KEY AUTOINCREMENT , TenMonAn VARCHAR , GiaMonAn INTEGER , DiaDiem VARCHAR )";
+        String create_user = "CREATE TABLE IF NOT EXISTS User(Id INTEGER PRIMARY KEY AUTOINCREMENT , UserName VARCHAR , Password VARCHAR );";
+        String create_table = "CREATE TABLE IF NOT EXISTS Ban(Id INTEGER PRIMARY KEY AUTOINCREMENT , name VARCHAR , tstatus INTEGER );";
+        sqLiteDB.queryData(create_restaurant);
+        sqLiteDB.queryData(create_user);
+        sqLiteDB.queryData(create_table);
         String addUserIfNotExistQuery = "INSERT OR IGNORE INTO User (UserName, Password) VALUES ('Admin', 'Admin')";
-        sqLiteDB.QueryData(addUserIfNotExistQuery);
+        sqLiteDB.queryData(addUserIfNotExistQuery);
 
         //Add value
 //        String insert = "INSERT INTO NhaHang VALUES(null, 'Com suon', 25000, 'Quan 10')";
@@ -111,7 +113,7 @@ public class DangNhapActivity extends AppCompatActivity {
         String userName = edtUser.getText().toString();
         String password = edtPassword.getText().toString();
         String query = "select * from user where username = '" + userName + "' and password = '" + password + "'";
-        Cursor cursor = sqLiteDB.GetData(query);
+        Cursor cursor = sqLiteDB.getData(query);
 
         boolean result = cursor.moveToNext();
         cursor.close();

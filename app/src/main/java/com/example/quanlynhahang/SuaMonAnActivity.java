@@ -33,7 +33,7 @@ public class SuaMonAnActivity extends ThemMonAnActivity {
                 String price = edPrice.getText().toString();
                 String address = edAddress.getText().toString();
                 String insertData = "UPDATE NhaHang SET TenMonAn = '"+name+"',GiaMonAn = '"+price+"',DiaDiem = '"+address+"' WHERE Id ="+id;
-                DangNhapActivity.sqLiteDB.QueryData(insertData);
+                DangNhapActivity.sqLiteDB.queryData(insertData);
                 finish();
             }
         });
