@@ -4,6 +4,13 @@
         <item>Bàn Trống</item>
         <item>Có Khách</item>
     </array>
+    <array name="table_status_free">
+        <item>Bàn Trống</item>
+    </array>
+    <array name="table_status_busy">
+        <item>Có Khách</item>
+    </array>
+
     <array name="table_action_array">
         <item>Tên</item>
         <item>Trạng thái</item>

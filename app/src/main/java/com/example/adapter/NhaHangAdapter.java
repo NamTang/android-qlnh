@@ -42,8 +42,12 @@ public class NhaHangAdapter extends RecyclerView.Adapter<NhaHangAdapter.ViewHold
     public void onBindViewHolder(@NonNull final ViewHolder viewHolder, int i) {
         NhaHang nhaHang = arrayRes.get(i);
         viewHolder.txtTen.setText(nhaHang.getTenmonan());
-        viewHolder.txtGia.setText(nhaHang.getGiamonan() + " Dong");
-        viewHolder.txtDiaChi.setText(nhaHang.getDiadiem());
+        if (viewHolder.txtGia != null) {
+            viewHolder.txtGia.setText(nhaHang.getGiamonan() + " Dong");
+        }
+        if (viewHolder.txtDiaChi != null) {
+            viewHolder.txtDiaChi.setText(nhaHang.getDiadiem());
+        }
     }
 
     @Override
@@ -59,8 +63,32 @@ public class NhaHangAdapter extends RecyclerView.Adapter<NhaHangAdapter.ViewHold
 
     class ViewHolder extends RecyclerView.ViewHolder implements View.OnCreateContextMenuListener {
 
+        private final MenuItem.OnMenuItemClickListener onChange = new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                switch (item.getItemId()) {
+                    case 1:
+                        Intent intent = new Intent(context, SuaMonAnActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK); //add this line
+                        intent.putExtra("Id", arrayRes.get(getPosition()).getId());
+                        intent.putExtra("Name", arrayRes.get(getPosition()).getTenmonan());
+                        intent.putExtra("Address", arrayRes.get(getPosition()).getDiadiem());
+                        intent.putExtra("Price", arrayRes.get(getPosition()).getGiamonan());
+                        context.startActivity(intent);
+                        notifyDataSetChanged();
+                        return true;
+                    case 2:
+                        String delete = "DELETE FROM NhaHang Where Id = '" + arrayRes.get(getPosition()).getId() + "'";
+                        DangNhapActivity.sqLiteDB.queryData(delete);
+                        arrayRes.remove(arrayRes.get(getPosition()));
+                        notifyDataSetChanged();
+                        Toast.makeText(context, "Delete Success", Toast.LENGTH_LONG).show();
+                        return true;
+                }
+                return false;
+            }
+        };
         TextView txtTen, txtGia, txtDiaChi;
-
 
         public ViewHolder(@NonNull final View itemView) {
             super(itemView);
@@ -80,33 +108,6 @@ public class NhaHangAdapter extends RecyclerView.Adapter<NhaHangAdapter.ViewHold
             edit.setOnMenuItemClickListener(onChange);
             delete.setOnMenuItemClickListener(onChange);
         }
-
-
-        private final MenuItem.OnMenuItemClickListener onChange = new MenuItem.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                switch (item.getItemId()) {
-                    case 1:
-                        Intent intent = new Intent(context, SuaMonAnActivity.class);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK); //add this line
-                        intent.putExtra("Id",arrayRes.get(getPosition()).getId());
-                        intent.putExtra("Name",arrayRes.get(getPosition()).getTenmonan());
-                        intent.putExtra("Address",arrayRes.get(getPosition()).getDiadiem());
-                        intent.putExtra("Price",arrayRes.get(getPosition()).getGiamonan());
-                        context.startActivity(intent);
-                        notifyDataSetChanged();
-                        return true;
-                    case 2:
-                        String delete = "DELETE FROM NhaHang Where Id = '" + arrayRes.get(getPosition()).getId() + "'";
-                        DangNhapActivity.sqLiteDB.queryData(delete);
-                        arrayRes.remove(arrayRes.get(getPosition()));
-                        notifyDataSetChanged();
-                        Toast.makeText(context, "Delete Success", Toast.LENGTH_LONG).show();
-                        return true;
-                }
-                return false;
-            }
-        };
 
     }
 

@@ -21,14 +21,20 @@ import android.widget.SearchView;
 import android.widget.Toast;
 
 import com.example.adapter.TableAdapter;
+import com.example.model.NhaHang;
 import com.example.model.Table;
 import com.example.service.SQLiteDB;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class TableActivity extends AppCompatActivity {
     public static SQLiteDB sqLiteDB;
     GridView gvTable;
     TableAdapter tableAdapter;
     int index = -1;
+    List selectedItems;
+    List<NhaHang> dishes = new ArrayList<NhaHang>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -185,6 +191,7 @@ public class TableActivity extends AppCompatActivity {
     public boolean onContextItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.mnuAddDish:
+                showDialogAddDishToTable();
                 break;
             case R.id.mnuCheckout:
                 break;
@@ -197,6 +204,59 @@ public class TableActivity extends AppCompatActivity {
         }
 
         return super.onContextItemSelected(item);
+    }
+
+    private void showDialogAddDishToTable() {
+        selectedItems = new ArrayList();  // Where we track the selected items
+        AlertDialog.Builder builder = new AlertDialog.Builder(TableActivity.this);
+        // Set the dialog title
+        // Specify the list array, the items to be selected by default (null for none),
+        // and the listener through which to receive callbacks when items are selected
+        builder.setMultiChoiceItems(getListDish(), null,
+                new DialogInterface.OnMultiChoiceClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which,
+                                        boolean isChecked) {
+                        if (isChecked) {
+                            // If the user checked the item, add it to the selected items
+                            selectedItems.add(which);
+                        } else if (selectedItems.contains(which)) {
+                            // Else, if the item is already in the array, remove it
+                            selectedItems.remove(Integer.valueOf(which));
+                        }
+                    }
+                })
+                // Set the action buttons
+                .setPositiveButton(R.string.save, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int id) {
+                        // User clicked OK, so save the selectedItems results somewhere
+                        // or return them to the component that opened the dialog
+                        Toast.makeText(TableActivity.this, selectedItems.size(), Toast.LENGTH_SHORT).show();
+                    }
+                })
+                .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.cancel();
+                    }
+                });
+    }
+
+    private String[] getListDish() {
+        String[] result = new String[]{};
+        Cursor cursor = sqLiteDB.getData("SELECT * from NhaHang");
+        dishes.clear();
+        while (cursor.moveToNext()) {
+            int id = cursor.getInt(0);
+            String ten_mon_an = cursor.getString(1);
+            int gia_mon_an = cursor.getInt(2);
+            String dia_diem = cursor.getString(3);
+            dishes.add(new NhaHang(id, ten_mon_an, gia_mon_an, dia_diem));
+            result[result.length] = ten_mon_an;
+        }
+
+        return result;
     }
 
     private void processUpdateTable() {
@@ -218,11 +278,11 @@ public class TableActivity extends AppCompatActivity {
 
     private void showDialogUpdateTableStatus() {
         AlertDialog.Builder builder = new AlertDialog.Builder(TableActivity.this);
-        builder.setItems(R.array.table_status_array, new DialogInterface.OnClickListener() {
+        builder.setItems(tableAdapter.getItem(index).getStatus() == Table.BUSY ? R.array.table_status_free : R.array.table_status_busy, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
                 // The 'which' argument contains the index position
                 // of the selected item
-                updateTableStatus(which);
+                updateTableStatus(tableAdapter.getItem(index).getStatus() == Table.BUSY ? Table.FREE : Table.BUSY);
             }
         });
         builder.create().show();
@@ -255,6 +315,7 @@ public class TableActivity extends AppCompatActivity {
         // Pass null as the parent view because its going in the dialog layout
         View dialogView = inflater.inflate(R.layout.dialog_update_table_name, null);
         final EditText edtTableName = dialogView.findViewById(R.id.edtTableName);
+        edtTableName.setText(tableAdapter.getItem(index).getName());
 
         builder.setView(dialogView)
                 // Add action buttons
