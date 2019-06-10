@@ -232,7 +232,7 @@ public class TableActivity extends AppCompatActivity {
                     public void onClick(DialogInterface dialog, int id) {
                         // User clicked OK, so save the selectedItems results somewhere
                         // or return them to the component that opened the dialog
-                        Toast.makeText(TableActivity.this, selectedItems.size(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(TableActivity.this, "" + selectedItems.size(), Toast.LENGTH_SHORT).show();
                     }
                 })
                 .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
@@ -241,11 +241,14 @@ public class TableActivity extends AppCompatActivity {
                         dialog.cancel();
                     }
                 });
+
+        builder.create().show();
     }
 
     private String[] getListDish() {
-        String[] result = new String[]{};
         Cursor cursor = sqLiteDB.getData("SELECT * from NhaHang");
+        String[] result = new String[cursor.getCount()];
+        int i = 0;
         dishes.clear();
         while (cursor.moveToNext()) {
             int id = cursor.getInt(0);
@@ -253,8 +256,9 @@ public class TableActivity extends AppCompatActivity {
             int gia_mon_an = cursor.getInt(2);
             String dia_diem = cursor.getString(3);
             dishes.add(new NhaHang(id, ten_mon_an, gia_mon_an, dia_diem));
-            result[result.length] = ten_mon_an;
+            result[i++] = ten_mon_an;
         }
+        cursor.close();
 
         return result;
     }
